@@ -2,7 +2,7 @@
   {
     "name": "Banner 1",
     "ads": false,
-    "banner_url": "https://github.com/tabewise/tabewise-ad/blob/main/offer/banner-1-sakura.png",
+    "banner_url": "https://raw.githubusercontent.com/tabewise/tabewise-ad/refs/heads/main/offer/banner-1-sakura.png",
     "link_url": "https://tabewise.github.io/",
     "start_datetime": "2026-10-01 09:00",
     "expire_datetime": "2027-10-01 00:00"
@@ -10,7 +10,7 @@
   {
     "name": "Banner 2",
     "ads": false,
-    "banner_url": "https://github.com/tabewise/tabewise-ad/blob/main/offer/banner-2-sky.png",
+    "banner_url": "https://raw.githubusercontent.com/tabewise/tabewise-ad/refs/heads/main/offer/banner-2-sky.png",
     "link_url": "",
     "start_datetime": "2026-10-01 09:00",
     "expire_datetime": "2027-10-01 00:00"
