@@ -1,0 +1,12 @@
+{
+  "latest_version": "1.0.0",
+  "minimum_supported_version": "1.0.0",
+  "update_available": false,
+  "force_update": false,
+  "release_date": "2026-11-22",
+  "update_title": "TABEWISE Update",
+  "update_message": "A new version of TABEWISE is available. Update the app to enjoy the latest improvements.",
+  "update_message_ja": "TABEWISEの新しいバージョンが利用可能です。最新の改善をお楽しみいただくため、アプリを更新してください。",
+  "android_store_url": "",
+  "ios_store_url": ""
+}
