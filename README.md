@@ -4,8 +4,8 @@ The Home screen shows a swipeable carousel of banners. Banners are **not inside 
 
 ## What to upload
 
-Folder: **`offer/` on the `master` branch** of `Shahidrox/Add-Halal-Lance` (https://github.com/Shahidrox/Add-Halal-Lance/tree/master/offer). The app reads it through
-`https://api.github.com/repos/Shahidrox/Add-Halal-Lance/contents/offer?ref=master`. The repository must stay **public**.
+Folder: **`offer/` on the `master` branch** of `Shahidrox/Add-Halal-Lance` (https://github.com/tabewise/tabewise-ad/tree/main/offer). The app reads it through
+`https://github.com/tabewise/tabewise-ad/tree/main/offer?ref=master`. The repository must stay **public**.
 
 | | |
 |---|---|
@@ -45,43 +45,53 @@ So a 1200 x 600 image is shown at roughly 3.0 to 3.75 pixels per dp: sharp on ev
 - **Image shape:** the image is scaled to fill the banner (cropped from the centre if the ratio is not 2:1), so export at exactly 2:1.
 - Do not put the app's own buttons, fake "OK / close" icons or anything that looks like a scan result inside a banner.
 
-The two samples in `docs/banners/samples/` follow this layout: text on the left, a round mark on the right, accent bar at the bottom left.
+Raw JSON endpoint:
 
-## Optional: `banners.json` (links, text, dates, order)
+`https://raw.githubusercontent.com/tabewise/tabewise-ad/refs/heads/main/promotion.json`
 
-Without it, banners are shown without a link. To add a link, a description for screen readers, show dates or an order, put a `banners.json` next to the images:
+The current configuration uses an array of promotion objects:
 
 ```json
-{
-  "version": 1,
-  "banners": [
-    {
-      "image": "banner-1-sakura.png",
-      "link": "https://example.com/offer",
-      "alt": { "en": "Spring offer", "ja": "春のキャンペーン" },
-      "start": "2026-12-01",
-      "end": "2026-12-31"
-    },
-    { "image": "banner-2-sky.png", "enabled": false }
-  ]
-}
+[
+  {
+    "name": "Banner 1",
+    "ads": false,
+    "banner_url": "https://raw.githubusercontent.com/tabewise/tabewise-ad/refs/heads/main/offer/banner-1-sakura.png",
+    "link_url": "https://tabewise.github.io/",
+    "start_datetime": "2026-10-01 09:00",
+    "expire_datetime": "2027-10-01 00:00"
+  },
+  {
+    "name": "Banner 2",
+    "ads": false,
+    "banner_url": "https://raw.githubusercontent.com/tabewise/tabewise-ad/refs/heads/main/offer/banner-2-sky.png",
+    "link_url": "",
+    "start_datetime": "2026-10-01 09:00",
+    "expire_datetime": "2027-10-01 00:00"
+  }
+]
 ```
 
-- `image`: the file name in the same folder (required).
-- `link`: must start with `https://`; it opens inside the app. Any other kind of link is ignored.
-- `alt`: text read by screen readers, in `en` and `ja` (optional).
-- `start` / `end`: `YYYY-MM-DD`, both inclusive (optional).
-- `enabled`: `false` hides an image without deleting it.
-- Images listed in `banners.json` come first, in its order; other images follow by name.
+Preserve this schema for compatibility. The app must support any number of entries in the array, not only two.
 
-## How it behaves
+Do not hardcode banner names, image URLs, destinations, or dates in the application.
 
-- On start the app shows the banners it saved last time, then updates from GitHub in the background. Without a connection it keeps showing the saved banners.
-- Only `https` addresses are used. Files that are not real png/jpg/webp images, or are over 2.5 MB, are skipped.
-- GitHub's public listing allows about 60 requests per hour per network address; the app asks once per start, so this is not a practical limit.
-- The request tells GitHub the phone's network address, as any web request does; the app sends no personal data. The Privacy text in the app says so.
-- Banners are advertising. Anything shown must follow the same rule as the rest of the app: **never say or imply that a product is halal or verified**.
+## 2. Banner rules
 
-## Regenerating the starter banners
+Implement the following behaviour exactly.
 
-`flutter test tool/render_banners_test.dart` (from `app/`, on a Mac with Hiragino fonts) redraws the two samples from the app's own logo code.
+### `ads` field
+
+- `ads: false` → Do not display an Ad label.
+- `ads: true` → Display a small "Ad" label on that banner.
+- This field identifies whether a banner is an advertisement. It does NOT enable or disable the banner.
+
+### `link_url` field
+
+- Valid non-empty HTTPS URL → Banner is clickable and opens the destination.
+- Empty `link_url` → Banner remains visible but is not clickable.
+- Invalid URL → Do not make the banner clickable.
+- Only allow safe HTTP/HTTPS destinations; reject unsupported schemes such as `javascript:`, `file:`, or other unsafe schemes.
+
+An invalid destination must not prevent the image or other valid banners from displaying.
+
